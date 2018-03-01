@@ -1,37 +1,28 @@
 // *************************** YOUR CODE BELOW *******************************
 //******************TEST EARLY AND OFTEN USING console.log() ******************
 //****************** SERIOUSLY TEST USING console.log()!!! ******************
-function giphyURLWithSearchTerm(searchTerm) {
-    // write a function that will return a url for the giphy API with
-    // the searchTerm provided in the parameters
-    var newUrl = 'https://api.giphy.com/v1/stickers/search?q=parameter&api_key=dc6zaTOxFJmzC';
-    return newUrl.replace('parameter', searchTerm);
-}
-    
 function appendImageToBody(srcURL) {
-    $('body').append('<img src="' + srcURL + '">');
+    $('.gallery').append('<img src="' + srcURL + '">');
 }
 
 function callGiphyAPIWithSearchTerm(searchTerm) {
+    var newUrl = 'https://api.giphy.com/v1/stickers/search?q=' + searchTerm + '&api_key=dc6zaTOxFJmzC';
     $.ajax({
-        url: giphyURLWithSearchTerm(searchTerm),
+        url: newUrl,
         method: "GET",
         success: function(response) {
         var info = response.data;
-            // Log the whole response to the console
-            //console.log(response);
+        console.log(info);
             if (info.length > 0) {
-            // Log the first image of the data to the console
-                console.log(info[0].url);
-            // Log the "type" property of the first image object to the console
-                console.log(info[0].type);   
-            // Log the "title" property of the first image object to the console
-                console.log(info[0].title);
+                appendImageToBody(info[0].images.original.url);
             }
         },
     }); 
 }
 
 $(document).ready(function(){
-
+    $('#srch').click(function(){
+        var input = $('#srch-term').val();
+        callGiphyAPIWithSearchTerm(input);
+    });
 });
